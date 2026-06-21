@@ -8,7 +8,7 @@ export default function Started() {
       {/* Top Header Section */}
       <View className="items-center justify-center flex-1 pt-12">
         <Image
-          source={require("../../assets/images/logo-2.jpeg")}
+          source={require("../../assets/images/started-icon.gif")}
           style={{ width: 110, height: 110, borderRadius: 55 }}
         />
 
