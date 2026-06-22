@@ -17,7 +17,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import Input from "./_components/input";
-
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(1, "Senha é obrigatória"),
@@ -138,7 +137,9 @@ export default function Login() {
                 <Text className="text-neutral font-inter-semibold text-sm">
                   Senha
                 </Text>
-                <TouchableOpacity onPress={() => console.log("Forgot password")}>
+                <TouchableOpacity
+                  onPress={() => console.log("Forgot password")}
+                >
                   <Text className="text-primary font-inter-semibold text-xs">
                     Esqueceu a senha?
                   </Text>
@@ -170,7 +171,9 @@ export default function Login() {
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
                         <Ionicons
-                          name={showPassword ? "eye-off-outline" : "eye-outline"}
+                          name={
+                            showPassword ? "eye-off-outline" : "eye-outline"
+                          }
                           size={20}
                           color="#9CA3AF"
                         />

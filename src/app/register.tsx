@@ -1,3 +1,4 @@
+import authClient from "@/lib/auth-client";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
@@ -43,12 +44,11 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isLoading },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -60,14 +60,18 @@ export default function Register() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    setIsLoading(true);
-    try {
-      // TODO: Integrar com a API de cadastro
-      console.log("Register data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // simula chamada
-      // router.replace("/home");
-    } finally {
-      setIsLoading(false);
+    const { data: signupData, error } = await authClient.signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      callbackURL: process.env.EXPO_PUBLIC_BETTER_AUTH_URL,
+    });
+    if (signupData) {
+      console.log("Register data:", signupData);
+    }
+
+    if (error) {
+      console.log("err", error);
     }
   };
 
