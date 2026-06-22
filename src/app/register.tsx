@@ -16,6 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 import Input from "./_components/input";
 
@@ -44,11 +45,11 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const toast = useToast();
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -67,11 +68,19 @@ export default function Register() {
       callbackURL: process.env.EXPO_PUBLIC_BETTER_AUTH_URL,
     });
     if (signupData) {
-      console.log("Register data:", signupData);
+      toast.show("Cadastro realizado com sucesso", {
+        type: "success",
+      });
+      router.replace("/login");
     }
 
     if (error) {
       console.log("err", error);
+      if (error) {
+        toast.show(error.message || "Ocorreu um erro", {
+          type: "danger",
+        });
+      }
     }
   };
 
@@ -301,10 +310,10 @@ export default function Register() {
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
               activeOpacity={0.85}
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="bg-primary w-full py-4 rounded-2xl items-center justify-center shadow-sm active:opacity-80 mb-4"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text className="text-white font-inter-bold text-base">

@@ -6,6 +6,7 @@ const authClient = createAuthClient({
     headers: {
       Origin: "http://10.0.2.2:3000",
     },
+    credentials: "include",
   },
 });
 

@@ -1,3 +1,4 @@
+import authClient from "@/lib/auth-client";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
@@ -15,6 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 import Input from "./_components/input";
 const loginSchema = z.object({
@@ -26,12 +28,11 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const toast = useToast();
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -41,14 +42,23 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
-    try {
-      // TODO: Integrar com a API de login
-      console.log("Login data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // simula chamada
-      // router.replace("/home");
-    } finally {
-      setIsLoading(false);
+    const { data: user, error } = await authClient.signIn.email({
+      email: data.email,
+      password: data.password,
+      callbackURL: process.env.EXPO_PUBLIC_BETTER_AUTH_URL,
+    });
+
+    if (error) {
+      toast.show(error.message || "Ocorreu um erro", {
+        type: "danger",
+      });
+    }
+    if (user) {
+      console.log("user data:", user);
+      toast.show("Login realizado com sucesso", {
+        type: "success",
+      });
+      router.replace("/painel");
     }
   };
 
@@ -196,10 +206,10 @@ export default function Login() {
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
               activeOpacity={0.85}
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="bg-primary w-full py-4 rounded-2xl items-center justify-center shadow-sm active:opacity-80 mb-4"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text className="text-white font-inter-bold text-base">
