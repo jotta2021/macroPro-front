@@ -18,52 +18,34 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import Input from "./_components/input";
 
-const registerSchema = z
-  .object({
-    name: z
-      .string()
-      .min(2, "Nome deve ter pelo menos 2 caracteres")
-      .max(80, "Nome muito longo")
-      .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Nome deve conter apenas letras"),
-    email: z.string().email("E-mail inválido"),
-    password: z
-      .string()
-      .min(8, "Senha deve ter pelo menos 8 caracteres")
-      .regex(/[A-Z]/, "Deve conter pelo menos uma letra maiúscula")
-      .regex(/[0-9]/, "Deve conter pelo menos um número"),
-    confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
+const loginSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(1, "Senha é obrigatória"),
+});
 
-type RegisterFormData = z.infer<typeof registerSchema>;
+type LoginFormData = z.infer<typeof loginSchema>;
 
-export default function Register() {
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      // TODO: Integrar com a API de cadastro
-      console.log("Register data:", data);
+      // TODO: Integrar com a API de login
+      console.log("Login data:", data);
       await new Promise((resolve) => setTimeout(resolve, 1500)); // simula chamada
       // router.replace("/home");
     } finally {
@@ -102,52 +84,15 @@ export default function Register() {
             />
 
             <Text className="text-neutral font-inter-bold text-2xl mb-1">
-              Criar conta
+              Boas-vindas!
             </Text>
             <Text className="text-neutral/60 font-inter text-sm text-center">
-              Comece sua jornada rumo a uma vida mais saudável
+              Faça login para continuar sua jornada
             </Text>
           </View>
 
           {/* ── Card ── */}
           <View className="flex-1 bg-white mx-4 mt-4 mb-6 rounded-3xl px-6 pt-7 pb-8 shadow-sm">
-            {/* Name */}
-            <View className="mb-4">
-              <Text className="text-neutral font-inter-semibold text-sm mb-2">
-                Nome completo
-              </Text>
-              <Controller
-                control={control}
-                name="name"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    placeholder="Seu nome"
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    error={errors.name}
-                    autoCapitalize="words"
-                    icon={
-                      <Ionicons
-                        name="person-outline"
-                        size={18}
-                        color={errors.name ? "#f87171" : "#9CA3AF"}
-                        style={{ marginRight: 10 }}
-                      />
-                    }
-                  />
-                )}
-              />
-              {errors.name && (
-                <View className="flex-row items-center mt-1.5 ml-1">
-                  <Ionicons name="alert-circle" size={13} color="#f87171" />
-                  <Text className="text-red-400 font-inter text-xs ml-1">
-                    {errors.name.message}
-                  </Text>
-                </View>
-              )}
-            </View>
-
             {/* Email */}
             <View className="mb-4">
               <Text className="text-neutral font-inter-semibold text-sm mb-2">
@@ -188,16 +133,23 @@ export default function Register() {
             </View>
 
             {/* Password */}
-            <View className="mb-4">
-              <Text className="text-neutral font-inter-semibold text-sm mb-2">
-                Senha
-              </Text>
+            <View className="mb-6">
+              <View className="flex-row justify-between items-center mb-2">
+                <Text className="text-neutral font-inter-semibold text-sm">
+                  Senha
+                </Text>
+                <TouchableOpacity onPress={() => console.log("Forgot password")}>
+                  <Text className="text-primary font-inter-semibold text-xs">
+                    Esqueceu a senha?
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <Controller
                 control={control}
                 name="password"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder="Sua senha"
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
@@ -218,9 +170,7 @@ export default function Register() {
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
                         <Ionicons
-                          name={
-                            showPassword ? "eye-off-outline" : "eye-outline"
-                          }
+                          name={showPassword ? "eye-off-outline" : "eye-outline"}
                           size={20}
                           color="#9CA3AF"
                         />
@@ -239,60 +189,6 @@ export default function Register() {
               )}
             </View>
 
-            {/* Confirm Password */}
-            <View className="mb-6">
-              <Text className="text-neutral font-inter-semibold text-sm mb-2">
-                Confirmar senha
-              </Text>
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    placeholder="Repita sua senha"
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    error={errors.confirmPassword}
-                    secureTextEntry={!showConfirmPassword}
-                    autoCapitalize="none"
-                    icon={
-                      <Ionicons
-                        name="shield-checkmark-outline"
-                        size={18}
-                        color={errors.confirmPassword ? "#f87171" : "#9CA3AF"}
-                        style={{ marginRight: 10 }}
-                      />
-                    }
-                    rightIcon={
-                      <Pressable
-                        onPress={() => setShowConfirmPassword((v) => !v)}
-                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                      >
-                        <Ionicons
-                          name={
-                            showConfirmPassword
-                              ? "eye-off-outline"
-                              : "eye-outline"
-                          }
-                          size={20}
-                          color="#9CA3AF"
-                        />
-                      </Pressable>
-                    }
-                  />
-                )}
-              />
-              {errors.confirmPassword && (
-                <View className="flex-row items-center mt-1.5 ml-1">
-                  <Ionicons name="alert-circle" size={13} color="#f87171" />
-                  <Text className="text-red-400 font-inter text-xs ml-1">
-                    {errors.confirmPassword.message}
-                  </Text>
-                </View>
-              )}
-            </View>
-
             {/* Submit Button */}
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
@@ -304,7 +200,7 @@ export default function Register() {
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text className="text-white font-inter-bold text-base">
-                  Criar conta
+                  Entrar
                 </Text>
               )}
             </TouchableOpacity>
@@ -346,14 +242,14 @@ export default function Register() {
               </Text>
             </TouchableOpacity>
 
-            {/* Login link */}
+            {/* Register link */}
             <View className="flex-row justify-center mt-5">
               <Text className="text-gray-500 font-inter text-sm">
-                Já tem uma conta?{" "}
+                Não tem uma conta?{" "}
               </Text>
-              <TouchableOpacity onPress={() => router.push("/login")}>
+              <TouchableOpacity onPress={() => router.push("/register")}>
                 <Text className="text-primary font-inter-bold text-sm">
-                  Entrar
+                  Criar conta
                 </Text>
               </TouchableOpacity>
             </View>

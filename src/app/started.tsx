@@ -6,6 +6,12 @@ export default function Started() {
   return (
     <SafeAreaView className="flex-1 px-6 justify-between py-6">
       {/* Top Header Section */}
+      <View className="items-center justify-center">
+        <Image
+          source={require("../../assets/images/gainz.png")}
+          style={{ width: 150, height: 150 }}
+        />
+      </View>
       <View className="items-center justify-center flex-1 pt-12">
         <Image
           source={require("../../assets/images/started-icon.gif")}

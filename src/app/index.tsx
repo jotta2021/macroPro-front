@@ -22,98 +22,20 @@ export default function Index() {
       description:
         "Descubra exatamente a quantidade de calorias e macronutrientes necessária para atingir seus objetivos de forma saudável.",
       image: require("../../assets/images/salad.png"),
-      floatingCards: [
-        {
-          icon: "🥩",
-          label: "Proteína",
-          value: "250g / dia",
-          color: "#EF4444",
-          position: { top: 10, left: -16 },
-          delay: 0,
-        },
-        {
-          icon: "🍚",
-          label: "Carboidrato",
-          value: "340g / dia",
-          color: "#F59E0B",
-          position: { top: 80, right: -16 },
-          delay: 120,
-        },
-        {
-          icon: "🔥",
-          label: "Calorias",
-          value: "2.450 kcal",
-          color: "#7ED957",
-          position: { bottom: 20, left: -10 },
-          delay: 240,
-        },
-      ],
     },
     {
       id: "2",
       title: "Tire Foto e Registre",
       description:
         "Basta tirar uma foto do seu prato! Nosso sistema analisa o alimento e calcula os nutrientes automaticamente para o seu diário.",
-      image: require("../../assets/images/photo.png"),
-      floatingCards: [
-        {
-          icon: "🤖",
-          label: "IA detectou",
-          value: "Frango + Arroz",
-          color: "#8B5CF6",
-          position: { top: 10, right: -16 },
-          delay: 0,
-        },
-        {
-          icon: "⚡",
-          label: "Análise",
-          value: "em 2 segundos",
-          color: "#06B6D4",
-          position: { bottom: 30, left: -16 },
-          delay: 150,
-        },
-        {
-          icon: "📊",
-          label: "Precisão",
-          value: "98% acurácia",
-          color: "#7ED957",
-          position: { top: 90, left: -10 },
-          delay: 280,
-        },
-      ],
+      image: require("../../assets/images/photo2.png"),
     },
     {
       id: "3",
       title: "Acompanhe seus Resultados",
       description:
         "Monitore sua evolução corporal, estabeleça novos hábitos e atinja suas metas de saúde de forma consistente e prática.",
-      image: require("../../assets/images/result.png"),
-      floatingCards: [
-        {
-          icon: "📈",
-          label: "Evolução",
-          value: "-4.5 kg",
-          color: "#EC4899",
-          position: { top: 10, right: -16 },
-          delay: 0,
-        },
-        {
-          icon: "🔥",
-          label: "Consistência",
-          value: "14 dias ativo",
-          color: "#7ED957",
-          position: { bottom: 30, left: -16 },
-          delay: 140,
-        },
-        {
-          icon: "🎯",
-          label: "Meta diária",
-          value: "100% batida",
-          color: "#F59E0B",
-          position: { top: 85, left: -10 },
-          delay: 260,
-        },
-      ],
+      image: require("../../assets/images/social.png"),
     },
   ];
 

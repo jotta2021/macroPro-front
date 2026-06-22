@@ -230,16 +230,6 @@ export function OnboardingSlide({ slide, isActive }: OnboardingSlideProps) {
             }}
           />
         </Animated.View>
-
-        {/* Floating Cards */}
-        {slide.floatingCards?.map((card, idx) => (
-          <FloatingCardItem
-            key={idx}
-            card={card}
-            isActive={isActive}
-            baseDelay={500}
-          />
-        ))}
       </View>
 
       <Animated.View
