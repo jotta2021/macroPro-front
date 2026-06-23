@@ -1,7 +1,9 @@
 import authClient from "@/lib/auth-client";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import * as Linking from "expo-linking";
 import { router } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -19,12 +21,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
 import Input from "./_components/input";
+
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(1, "Senha é obrigatória"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +59,6 @@ export default function Login() {
       });
     }
     if (user) {
-      console.log("user data:", user);
       toast.show("Login realizado com sucesso", {
         type: "success",
       });
@@ -62,11 +66,33 @@ export default function Login() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    // TODO: Integrar com Google OAuth
-    console.log("Google sign-in");
-  };
+  const handleGoogleSignIn = async () => {
+    // O deep link que o backend vai redirecionar após o OAuth do Google (sua tela de destino)
+    const callbackURL = Linking.createURL("/painel");
 
+    const result = await authClient.signIn.social({
+      provider: "google",
+      callbackURL,
+      fetchOptions: {
+        onError: (ctx) => {
+          toast.show(ctx.error.message || "Erro ao autenticar com Google", {
+            type: "danger",
+          });
+          console.log(ctx);
+        },
+      },
+    });
+
+    if (result?.data?.url) {
+      const authResult = await WebBrowser.openAuthSessionAsync(
+        result.data.url,
+        callbackURL,
+      );
+      if (authResult.type !== "success") {
+        toast.show("Não foi possível obter a sessão", { type: "danger" });
+      }
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView

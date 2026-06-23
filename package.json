@@ -1,12 +1,16 @@
 {
-  "name": "diret",
+  "name": "meuapp",
+  "slug": "meuapp",
+  "scheme": "meuapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@better-auth/expo": "^1.6.20",
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~56.0.16",
     "@expo/vector-icons": "^15.0.2",
     "@hookform/resolvers": "^5.4.0",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@shopify/react-native-skia": "2.6.2",
     "babel-preset-expo": "^56.0.14",
     "better-auth": "^1.6.20",
@@ -20,7 +24,9 @@
     "expo-image": "~56.0.10",
     "expo-linear-gradient": "~56.0.4",
     "expo-linking": "~56.0.13",
+    "expo-network": "^56.0.5",
     "expo-router": "~56.2.9",
+    "expo-secure-store": "^56.0.4",
     "expo-splash-screen": "~56.0.10",
     "expo-status-bar": "~56.0.4",
     "expo-symbols": "~56.0.6",
@@ -51,8 +57,8 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
