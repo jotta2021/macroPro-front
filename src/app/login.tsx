@@ -20,7 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
-import Input from "./_components/input";
+import Input from "../shared/ui/input";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -50,7 +50,6 @@ export default function Login() {
     const { data: user, error } = await authClient.signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: process.env.EXPO_PUBLIC_BETTER_AUTH_URL,
     });
 
     if (error) {
@@ -59,16 +58,17 @@ export default function Login() {
       });
     }
     if (user) {
+      console.log(user);
       toast.show("Login realizado com sucesso", {
         type: "success",
       });
-      router.replace("/painel");
+      router.replace("/private");
     }
   };
 
   const handleGoogleSignIn = async () => {
     // O deep link que o backend vai redirecionar após o OAuth do Google (sua tela de destino)
-    const callbackURL = Linking.createURL("/painel");
+    const callbackURL = Linking.createURL("/private");
 
     const result = await authClient.signIn.social({
       provider: "google",
@@ -78,7 +78,6 @@ export default function Login() {
           toast.show(ctx.error.message || "Erro ao autenticar com Google", {
             type: "danger",
           });
-          console.log(ctx);
         },
       },
     });

@@ -6,6 +6,7 @@ interface InputProps extends Omit<TextInputProps, "onChange"> {
   error?: any;
   onChange?: (text: string) => void;
   errors?: any;
+  className?: string;
 }
 
 export default function Input({
@@ -18,6 +19,7 @@ export default function Input({
   errors,
   icon,
   rightIcon,
+  className,
   ...rest
 }: InputProps) {
   const hasError = !!(error || (errors && errors.name));

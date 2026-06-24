@@ -18,7 +18,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useToast } from "react-native-toast-notifications";
 import { z } from "zod";
-import Input from "./_components/input";
+import Input from "../shared/ui/input";
 
 const registerSchema = z
   .object({
