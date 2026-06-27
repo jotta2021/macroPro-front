@@ -1,8 +1,12 @@
 import Colors from "@/shared/theme/colors.json";
-import Button from "@/shared/ui/base/button";
 import { Entypo } from "@expo/vector-icons";
-import { Image, Text, View } from "react-native";
-export default function HeaderDiary() {
+import { Image, Text, TouchableOpacity, View } from "react-native";
+
+interface Props {
+  openCalendar: () => void;
+}
+
+export default function HeaderDiary({ openCalendar }: Props) {
   const fire = 2;
   return (
     <View className="justify-between flex-row items-center">
@@ -21,10 +25,11 @@ export default function HeaderDiary() {
           />
           <Text className="text-lg text-neutral font-inter-bold">10</Text>
         </View>
-        <Button backgroundColor="transparent" width={24}>
+        <TouchableOpacity onPress={openCalendar} activeOpacity={0.7}>
           <Entypo name="calendar" size={24} color={Colors.neutral} />
-        </Button>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
+

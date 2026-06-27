@@ -1,6 +1,7 @@
 import { SummaryDiary } from "@/models/sumary-model";
 import Colors from "@/shared/theme/colors.json";
 import { CircularProgress } from "@/shared/ui/organisms/circular-progress";
+import { AnimatedProgressBar } from "@/shared/ui/organisms/progress";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface MacroBarProps {
@@ -16,12 +17,7 @@ function MacroBar({ label, current, total, color }: MacroBarProps) {
   return (
     <View className="flex-1 items-center gap-1">
       <Text className="text-xs font-inter text-neutralLight">{label}</Text>
-      <View className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <View
-          className="h-full rounded-full"
-          style={{ width: `${progress * 100}%`, backgroundColor: color }}
-        />
-      </View>
+      <AnimatedProgressBar progress={progress} progressColor={color} />
       <Text className="text-xs font-inter-medium text-neutral">
         {current} / {total} g
       </Text>
@@ -51,7 +47,7 @@ export default function SummaryCard({
 
   const caloriesProgress =
     caloriesTarget > 0 ? Math.min(caloriesConsumed / caloriesTarget, 1) : 0;
-  const remaining = Math.max(caloriesTarget - caloriesConsumed, 0);
+  const remaining = Math.max(caloriesTarget - caloriesConsumed, 0).toFixed(2);
 
   return (
     <View className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm shadow-black/5">

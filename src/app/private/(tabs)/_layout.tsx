@@ -4,10 +4,6 @@ import { Tabs } from "expo-router";
 export default function TabLayout() {
   return (
     <Tabs>
-      {/* Exclude _components from routing */}
-      <Tabs.Screen name="diary/_components/header" options={{ href: null }} />
-      <Tabs.Screen name="diary/_components/summaryCard" options={{ href: null }} />
-
       <Tabs.Screen
         name="diary/index"
         options={{
@@ -35,6 +31,13 @@ export default function TabLayout() {
           tabBarLabel: "Perfil",
           tabBarActiveTintColor: colors.primaryDark,
         }}
+      />
+
+      {/* Exclude _components from routing */}
+      <Tabs.Screen name="diary/_components/header" options={{ href: null }} />
+      <Tabs.Screen
+        name="diary/_components/summaryCard"
+        options={{ href: null }}
       />
     </Tabs>
   );
