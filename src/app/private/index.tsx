@@ -53,7 +53,7 @@ export default function OnBoarding() {
     mutationFn: postProfile,
     onSuccess(res) {
       queryClient.invalidateQueries({ queryKey: [apiKeys.profile] });
-      toast.show("Profile created successfully", {
+      toast.show("Seu planejamento foi criado", {
         type: "success",
       });
       console.log(res);
@@ -203,7 +203,7 @@ export default function OnBoarding() {
 
   useEffect(() => {
     if (dataProfile) {
-      router.replace("/private/home");
+      router.replace("/private/(tabs)");
     }
   }, [dataProfile]);
 

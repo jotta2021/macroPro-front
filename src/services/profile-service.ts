@@ -10,3 +10,8 @@ export async function getProfile(): Promise<completeProfile> {
   const res = await api.get("/profile");
   return res.data;
 }
+
+export async function putProfile(props: profileProps) {
+  const res = await api.put("/profile", props);
+  return res.data;
+}

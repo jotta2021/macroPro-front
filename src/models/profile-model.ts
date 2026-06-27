@@ -18,5 +18,5 @@ export type profileProps = {
 
 export type completeProfile = profileProps & {
   userId: string;
-  User: User;
+  user: User;
 };

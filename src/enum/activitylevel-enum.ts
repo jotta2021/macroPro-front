@@ -3,3 +3,10 @@ export enum ActivityLevel {
   MODERATE = "MODERATE",
   INTENSE = "INTENSE",
 }
+
+export const descriptionActivityLevel: Record<ActivityLevel, string> = {
+  SEDENTARY: "Sedentário",
+  MODERATE: "Moderadamente ativo",
+  INTENSE: "Extremamente ativo",
+};
+

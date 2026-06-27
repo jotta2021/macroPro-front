@@ -4,7 +4,11 @@ export default function ProtectedLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ headerShown: true }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="editProfile"
+        options={{ headerShown: true, title: "Editar perfil" }}
+      />
     </Stack>
   );
 }

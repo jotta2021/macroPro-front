@@ -1,3 +1,5 @@
+const colors = require("./src/shared/theme/colors.json");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // NOTE: Update this to include the paths to all files that contain Nativewind classes.
@@ -15,11 +17,7 @@ module.exports = {
         "inter-semibold": ["InterSemiBold"],
         "inter-bold": ["InterBold"],
       },
-      colors: {
-        primary: "#7ED957",
-        secondary: "#ff9933",
-        neutral: "#1F2228",
-      },
+      colors: colors,
     },
   },
   plugins: [],
