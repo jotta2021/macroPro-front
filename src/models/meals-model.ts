@@ -25,3 +25,12 @@ export type MealResponse = {
   date: string;
   items: MealItemResponse[];
 };
+
+export type MealPost = {
+  type: MealType;
+  date: Date;
+  items: {
+    foodId: string;
+    consumedGrams: number;
+  }[];
+};

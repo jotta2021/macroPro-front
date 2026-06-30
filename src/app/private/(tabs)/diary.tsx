@@ -11,10 +11,10 @@ import { ScrollView, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderDiary from "../../_components/diary/header";
-import MealList from "../../_components/diary/mealList";
-import SummaryCard from "../../_components/diary/summaryCard";
-import SummaryLoading from "../../_components/diary/summaryLoading";
+import HeaderDiary from "../_components/diary/header";
+import MealList from "../_components/diary/mealList";
+import SummaryCard from "../_components/diary/summaryCard";
+import SummaryLoading from "../_components/diary/summaryLoading";
 
 localesPTBR();
 export default function Home() {

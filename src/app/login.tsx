@@ -18,7 +18,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useToast } from "react-native-toast-notifications";
+import { toastColors } from "@/shared/theme/toast-colors";
+import { useToast } from "@/shared/ui/molecules/Toast";
 import { z } from "zod";
 import Input from "../shared/ui/input";
 
@@ -54,13 +55,17 @@ export default function Login() {
 
     if (error) {
       toast.show(error.message || "Ocorreu um erro", {
-        type: "danger",
+        type: "error",
+        backgroundColor: toastColors["error"],
+        position: "top",
       });
     }
     if (user) {
       console.log(user);
       toast.show("Login realizado com sucesso", {
         type: "success",
+        backgroundColor: toastColors["success"],
+        position: "top",
       });
       router.replace("/private");
     }
@@ -76,7 +81,9 @@ export default function Login() {
       fetchOptions: {
         onError: (ctx) => {
           toast.show(ctx.error.message || "Erro ao autenticar com Google", {
-            type: "danger",
+            type: "error",
+            backgroundColor: toastColors["error"],
+            position: "top",
           });
         },
       },
@@ -88,7 +95,11 @@ export default function Login() {
         callbackURL,
       );
       if (authResult.type !== "success") {
-        toast.show("Não foi possível obter a sessão", { type: "danger" });
+        toast.show("Não foi possível obter a sessão", {
+          type: "error",
+          backgroundColor: toastColors["error"],
+          position: "top",
+        });
       }
     }
   };

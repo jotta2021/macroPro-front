@@ -16,7 +16,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useToast } from "react-native-toast-notifications";
+import { toastColors } from "@/shared/theme/toast-colors";
+import { useToast } from "@/shared/ui/molecules/Toast";
 import { z } from "zod";
 import Input from "../shared/ui/input";
 
@@ -70,6 +71,8 @@ export default function Register() {
     if (signupData) {
       toast.show("Cadastro realizado com sucesso", {
         type: "success",
+        backgroundColor: toastColors["success"],
+        position: "top",
       });
       router.replace("/login");
     }
@@ -78,7 +81,9 @@ export default function Register() {
       console.log("err", error);
       if (error) {
         toast.show(error.message || "Ocorreu um erro", {
-          type: "danger",
+          type: "error",
+          backgroundColor: toastColors["error"],
+          position: "top",
         });
       }
     }

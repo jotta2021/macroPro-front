@@ -9,6 +9,7 @@ export default function ProtectedLayout() {
         name="editProfile"
         options={{ headerShown: true, title: "Editar perfil" }}
       />
+      <Stack.Screen name="meals/newItens" options={{ headerShown: true }} />
     </Stack>
   );
 }

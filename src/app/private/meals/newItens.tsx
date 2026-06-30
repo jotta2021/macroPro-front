@@ -1,0 +1,132 @@
+import { AddFoodSheet } from "@/app/private/_components/newItem/AddFoodSheet";
+import { FoodList } from "@/app/private/_components/newItem/FoodList";
+import { apiKeys } from "@/core/apiKeys";
+import { MealType } from "@/enum/meal-enum";
+import { Food } from "@/models/foods-model";
+import getFoods from "@/services/foods-service";
+import Colors from "@/shared/theme/colors.json";
+import { toastColors } from "@/shared/theme/toast-colors";
+import CustomButton from "@/shared/ui/customButton";
+import { SearchBar } from "@/shared/ui/molecules/search-bar/SearchBar";
+import { useToast } from "@/shared/ui/molecules/Toast";
+import type { BottomSheetMethods } from "@/shared/ui/templates/bottom-sheet/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { useRef, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import z from "zod";
+
+const formSchema = z.object({
+  type: z.enum(MealType),
+  date: z.string().min(1, { message: "Informe a data" }),
+  items: z
+    .array(
+      z.object({
+        foodId: z.string().min(1, { message: "Informe o alimento" }),
+        consumedGrams: z
+          .number()
+          .min(1, { message: "Informe a quantidade consumida" }),
+      }),
+    )
+    .min(1, { message: "Informe pelo menos um alimento" }),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+export default function NewItens() {
+  const { title, type } = useLocalSearchParams<{
+    title: string;
+    type: MealType;
+  }>();
+  const [search, setSearch] = useState("");
+  const [selectedFood, setSelectedFood] = useState<Food | null>(null);
+  const sheetRef = useRef<BottomSheetMethods>(null);
+  const toast = useToast();
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      type: type,
+      date: "",
+      items: [],
+    },
+  });
+
+  const { append, fields } = useFieldArray({
+    control: form.control,
+    name: "items",
+  });
+  const {
+    data: foods,
+    isLoading,
+    isRefetching,
+    refetch,
+  } = useQuery({
+    queryFn: () => getFoods(search),
+    queryKey: [apiKeys.foods, search],
+    retry: 2,
+  });
+
+  function handleOpenFoodSheet(food: Food) {
+    setSelectedFood(food);
+    sheetRef.current?.expand();
+  }
+
+  function handleAddFood(food: Food, consumedGrams: number) {
+    append({ foodId: food.id, consumedGrams });
+    toast.show("Alimento adicionado", {
+      type: "success",
+      backgroundColor: toastColors["success"],
+      position: "top",
+    });
+  }
+
+  console.log(form.getValues());
+
+  async function onSubmit(values: FormData) {
+    console.log(values);
+  }
+
+  return (
+    <GestureHandlerRootView className="flex-1">
+      <SafeAreaView className="flex-1">
+        <Stack.Screen
+          options={{
+            title: title || "Novo item",
+          }}
+        />
+        <View className="flex-1 px-6 py-2">
+          <SearchBar
+            containerWidth={350}
+            tint={Colors.neutral}
+            textCenterOffset={4}
+            iconCenterOffset={4}
+            placeholder="Buscar alimentos"
+            cancelButtonWidth={70}
+            onSearch={setSearch}
+          />
+          <View className="flex-1 mt-4">
+            <FoodList
+              foods={foods}
+              isLoading={isLoading}
+              isRefetching={isRefetching}
+              onAdd={handleOpenFoodSheet}
+              onRefetch={refetch}
+            />
+          </View>
+
+          <CustomButton title="Confirmar" />
+        </View>
+
+        <AddFoodSheet
+          ref={sheetRef}
+          food={selectedFood}
+          onConfirm={handleAddFood}
+        />
+      </SafeAreaView>
+    </GestureHandlerRootView>
+  );
+}

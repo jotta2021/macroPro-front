@@ -20,7 +20,8 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useToast } from "react-native-toast-notifications";
+import { toastColors } from "@/shared/theme/toast-colors";
+import { useToast } from "@/shared/ui/molecules/Toast";
 
 // Step 0 = intro (sem progresso visível), steps 1-6 = dados
 const TOTAL_STEPS = 6;
@@ -55,12 +56,16 @@ export default function OnBoarding() {
       queryClient.invalidateQueries({ queryKey: [apiKeys.profile] });
       toast.show("Seu planejamento foi criado", {
         type: "success",
+        backgroundColor: toastColors["success"],
+        position: "top",
       });
       console.log(res);
     },
     onError(error) {
       toast.show(error.message, {
-        type: "danger",
+        type: "error",
+        backgroundColor: toastColors["error"],
+        position: "top",
       });
       console.log(error);
     },

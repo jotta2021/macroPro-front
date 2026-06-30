@@ -5,7 +5,7 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="diary/index"
+        name="diary"
         options={{
           headerShown: false,
           tabBarIcon: ({ color, focused }) =>

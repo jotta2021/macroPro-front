@@ -1,5 +1,6 @@
 import authClient from "@/lib/auth-client";
 import queryClient from "@/lib/query-client";
+import { ToastProviderWithViewport } from "@/shared/ui/molecules/Toast";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -9,7 +10,6 @@ import {
 } from "@expo-google-fonts/inter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import { ToastProvider } from "react-native-toast-notifications";
 import "../../global.css";
 
 export default function RootLayout() {
@@ -29,25 +29,7 @@ export default function RootLayout() {
   const isLoggedIn = !!session;
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider
-        placement="top"
-        duration={5000}
-        animationType="slide-in"
-        animationDuration={250}
-        successColor="green"
-        dangerColor="red"
-        warningColor="orange"
-        normalColor="gray"
-        //icon={<Icon />}
-        //successIcon={<SuccessIcon />}
-        //dangerIcon={<DangerIcon />}
-        //warningIcon={<WarningIcon />}
-        textStyle={{ fontSize: 12 }}
-        offset={50} // offset for both top and bottom toasts
-        offsetTop={30}
-        offsetBottom={40}
-        swipeEnabled={true}
-      >
+      <ToastProviderWithViewport>
         <Stack>
           <Stack.Protected guard={!isLoggedIn}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -60,7 +42,7 @@ export default function RootLayout() {
             <Stack.Screen name="private" options={{ headerShown: false }} />
           </Stack.Protected>
         </Stack>
-      </ToastProvider>
+      </ToastProviderWithViewport>
     </QueryClientProvider>
   );
 }

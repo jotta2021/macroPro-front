@@ -4,13 +4,11 @@ import Colors from "@/shared/theme/colors.json";
 import Button from "@/shared/ui/base/button";
 import { CircularProgress } from "@/shared/ui/organisms/circular-progress";
 import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { FlatList, Image, Text, View } from "react-native";
 
 interface MealListProps {
   meals?: SummaryDiary["meals"];
-  onAddMealPress?: (type: MealType) => void;
-  onMealDetailsPress?: (type: MealType) => void;
-  onSeeMorePress?: () => void;
 }
 
 const MealImages: Record<MealType, any> = {
@@ -20,12 +18,7 @@ const MealImages: Record<MealType, any> = {
   [MealType.SNACK]: require("../../../../../assets/images/french-fries.png"),
 };
 
-export default function MealList({
-  meals,
-  onAddMealPress,
-  onMealDetailsPress,
-  onSeeMorePress,
-}: MealListProps) {
+export default function MealList({ meals }: MealListProps) {
   const renderItem = ({
     item,
     index,
@@ -44,7 +37,25 @@ export default function MealList({
         : "Nenhum alimento registrado";
 
     const imageUri = MealImages[item.type];
-
+    const navigateToMeal = (mealId: string) => {
+      if (!mealId) {
+        router.push({
+          pathname: "/private/meals/newItens",
+          params: {
+            title: `${MealTypeDescription[item.type]}`,
+            type: item.type,
+          },
+        });
+      } else {
+        router.push({
+          pathname: `/private/meals/${mealId}` as any,
+          params: {
+            id: mealId,
+            title: `${MealTypeDescription[item.type]}`,
+          },
+        });
+      }
+    };
     return (
       <View>
         <View className="flex-row items-center justify-between py-4">
@@ -88,6 +99,7 @@ export default function MealList({
             width={30}
             height={30}
             borderRadius={30}
+            onPress={() => navigateToMeal(item.mealId)}
           >
             <AntDesign name="plus" color={"white"} size={18} />
           </Button>
