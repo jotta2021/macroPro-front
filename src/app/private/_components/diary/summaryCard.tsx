@@ -47,7 +47,7 @@ export default function SummaryCard({
 
   const caloriesProgress =
     caloriesTarget > 0 ? Math.min(caloriesConsumed / caloriesTarget, 1) : 0;
-  const remaining = Math.max(caloriesTarget - caloriesConsumed, 0).toFixed(2);
+  const remaining = Math.max(caloriesTarget - caloriesConsumed, 0).toFixed(0);
 
   return (
     <View className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm shadow-black/5">

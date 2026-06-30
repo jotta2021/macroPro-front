@@ -2,8 +2,10 @@ import { AddFoodSheet } from "@/app/private/_components/newItem/AddFoodSheet";
 import { FoodList } from "@/app/private/_components/newItem/FoodList";
 import { apiKeys } from "@/core/apiKeys";
 import { MealType } from "@/enum/meal-enum";
+import queryClient from "@/lib/query-client";
 import { Food } from "@/models/foods-model";
 import getFoods from "@/services/foods-service";
+import { postMeals } from "@/services/meals-service";
 import Colors from "@/shared/theme/colors.json";
 import { toastColors } from "@/shared/theme/toast-colors";
 import CustomButton from "@/shared/ui/customButton";
@@ -11,8 +13,8 @@ import { SearchBar } from "@/shared/ui/molecules/search-bar/SearchBar";
 import { useToast } from "@/shared/ui/molecules/Toast";
 import type { BottomSheetMethods } from "@/shared/ui/templates/bottom-sheet/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { View } from "react-native";
@@ -22,7 +24,7 @@ import z from "zod";
 
 const formSchema = z.object({
   type: z.enum(MealType),
-  date: z.string().min(1, { message: "Informe a data" }),
+  date: z.date().min(1, { message: "Informe a data" }),
   items: z
     .array(
       z.object({
@@ -50,7 +52,7 @@ export default function NewItens() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       type: type,
-      date: "",
+      date: new Date(),
       items: [],
     },
   });
@@ -69,7 +71,26 @@ export default function NewItens() {
     queryKey: [apiKeys.foods, search],
     retry: 2,
   });
-
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: postMeals,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [apiKeys.meals] });
+      queryClient.invalidateQueries({ queryKey: [apiKeys.summary] });
+      toast.show("Refeição adicionada com sucesso!", {
+        type: "success",
+        backgroundColor: toastColors["success"],
+        position: "top",
+      });
+      router.back();
+    },
+    onError: (error) => {
+      toast.show(error?.message || "Ocorreu um erro", {
+        type: "error",
+        backgroundColor: toastColors["error"],
+        position: "top",
+      });
+    },
+  });
   function handleOpenFoodSheet(food: Food) {
     setSelectedFood(food);
     sheetRef.current?.expand();
@@ -84,10 +105,8 @@ export default function NewItens() {
     });
   }
 
-  console.log(form.getValues());
-
   async function onSubmit(values: FormData) {
-    console.log(values);
+    await mutateAsync(values);
   }
 
   return (
@@ -118,7 +137,11 @@ export default function NewItens() {
             />
           </View>
 
-          <CustomButton title="Confirmar" />
+          <CustomButton
+            title="Confirmar"
+            onPress={form.handleSubmit(onSubmit)}
+            loading={isPending}
+          />
         </View>
 
         <AddFoodSheet

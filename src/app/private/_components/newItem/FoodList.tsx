@@ -1,7 +1,8 @@
+import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
 import { Food } from "@/models/foods-model";
 import Colors from "@/shared/theme/colors.json";
 import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, FlatList, RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, Text, View } from "react-native";
 import { FoodListItem } from "./FoodListItem";
 
 export type FoodListProps = {
@@ -21,9 +22,33 @@ export function FoodList({
 }: FoodListProps) {
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center py-10">
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
+      <ShimmerGroup isLoading={true}>
+        <View className="gap-3 pt-1">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <View
+              key={i}
+              className="flex-row items-center justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3"
+            >
+              {/* Text lines */}
+              <View className="flex-1 mr-3 gap-2">
+                <Shimmer
+                  preset="neutral"
+                  style={{ width: "70%", height: 14, borderRadius: 8 }}
+                />
+                <Shimmer
+                  preset="neutral"
+                  style={{ width: "40%", height: 12, borderRadius: 8 }}
+                />
+              </View>
+              {/* Add button */}
+              <Shimmer
+                preset="neutral"
+                style={{ width: 36, height: 36, borderRadius: 18 }}
+              />
+            </View>
+          ))}
+        </View>
+      </ShimmerGroup>
     );
   }
 
