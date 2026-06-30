@@ -1,4 +1,4 @@
-import { SummaryDiary } from "@/models/sumary-model";
+import { DailyResume } from "@/models/sumary-model";
 import Colors from "@/shared/theme/colors.json";
 import { CircularProgress } from "@/shared/ui/organisms/circular-progress";
 import { AnimatedProgressBar } from "@/shared/ui/organisms/progress";
@@ -26,7 +26,7 @@ function MacroBar({ label, current, total, color }: MacroBarProps) {
 }
 
 interface SummaryCardProps {
-  data: SummaryDiary;
+  data: DailyResume;
   onDetailsPress?: () => void;
 }
 

@@ -1,4 +1,5 @@
 import { apiKeys } from "@/core/apiKeys";
+import getMeals from "@/services/meals-service";
 import getSumary from "@/services/sumary-service";
 import Colors from "@/shared/theme/colors.json";
 import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
@@ -12,6 +13,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderDiary from "./_components/header";
+import MealList from "./_components/mealList";
 import SummaryCard from "./_components/summaryCard";
 
 LocaleConfig.locales["pt-br"] = {
@@ -67,6 +69,13 @@ export default function Home() {
     enabled: !!selectedDate,
   });
 
+  const { data: mealsList, isPending: mealsPending } = useQuery({
+    queryKey: [apiKeys.meals, selectedDate],
+    queryFn: () => getMeals(selectedDate),
+    enabled: !!selectedDate,
+  });
+
+  console.log(data);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="flex-1" edges={["top"]}>
@@ -110,7 +119,11 @@ export default function Home() {
             <HeaderDiary
               openCalendar={() => sheetRef.current?.snapToIndex(0)}
             />
-            {data && <SummaryCard data={data} />}
+            {data && <SummaryCard data={data.dailySummary} />}
+
+            <View>
+              <MealList meals={data?.meals} />
+            </View>
           </ScrollView>
         )}
       </SafeAreaView>
