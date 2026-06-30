@@ -24,9 +24,18 @@ export type MealResponse = {
   type: MealType;
   date: string;
   items: MealItemResponse[];
+  totalCalories?: number;
+  totalCarbo?: number;
+  totalProtein?: number;
+  totalFat?: number;
+  targetCalories?: number;
+  targetCarbo?: number;
+  targetProtein?: number;
+  targetFat?: number;
 };
 
 export type MealPost = {
+  id: string;
   type: MealType;
   date: Date;
   items: {

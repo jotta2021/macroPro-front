@@ -1,16 +1,17 @@
-import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
 import { Food } from "@/models/foods-model";
 import Colors from "@/shared/theme/colors.json";
+import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { FoodListItem } from "./FoodListItem";
 
 export type FoodListProps = {
-  foods: Food[] | undefined;
+  foods?: Food[];
   isLoading: boolean;
   isRefetching: boolean;
   onAdd: (food: Food) => void;
   onRefetch: () => void;
+  foodsSelecteds?: { foodId: string }[];
 };
 
 export function FoodList({
@@ -19,6 +20,7 @@ export function FoodList({
   isRefetching,
   onAdd,
   onRefetch,
+  foodsSelecteds,
 }: FoodListProps) {
   if (isLoading) {
     return (
@@ -71,7 +73,13 @@ export function FoodList({
     <FlatList
       data={foods}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <FoodListItem food={item} onAdd={onAdd} />}
+      renderItem={({ item }) => (
+        <FoodListItem
+          food={item}
+          onAdd={onAdd}
+          foodIsSelected={foodsSelecteds?.some((f) => f.foodId === item.id)}
+        />
+      )}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 24 }}
       refreshControl={

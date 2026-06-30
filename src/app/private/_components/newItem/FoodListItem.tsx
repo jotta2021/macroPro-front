@@ -6,9 +6,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 type FoodListItemProps = {
   food: Food;
   onAdd: (food: Food) => void;
+  foodIsSelected?: boolean;
 };
 
-export function FoodListItem({ food, onAdd }: FoodListItemProps) {
+export function FoodListItem({
+  food,
+  onAdd,
+  foodIsSelected,
+}: FoodListItemProps) {
   return (
     <View className="flex-row items-center justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm shadow-black/5">
       {/* Info */}
@@ -33,9 +38,13 @@ export function FoodListItem({ food, onAdd }: FoodListItemProps) {
       <TouchableOpacity
         onPress={() => onAdd(food)}
         activeOpacity={0.75}
-        className="bg-transparent border-2 border-primary rounded-full w-9 h-9 items-center justify-center"
+        className={` ${foodIsSelected ? "bg-primary" : "bg-transparent"} border-2  border-primary rounded-full w-9 h-9 items-center justify-center transition-all duration-300`}
       >
-        <Ionicons name="add" size={20} color={Colors.primary} />
+        {foodIsSelected ? (
+          <Ionicons name="checkmark" size={20} color={"white"} />
+        ) : (
+          <Ionicons name="add" size={20} color={Colors.primary} />
+        )}
       </TouchableOpacity>
     </View>
   );

@@ -5,7 +5,7 @@ import { MealType } from "@/enum/meal-enum";
 import queryClient from "@/lib/query-client";
 import { Food } from "@/models/foods-model";
 import getFoods from "@/services/foods-service";
-import { postMeals } from "@/services/meals-service";
+import { postMeals, updateMeal } from "@/services/meals-service";
 import Colors from "@/shared/theme/colors.json";
 import { toastColors } from "@/shared/theme/toast-colors";
 import CustomButton from "@/shared/ui/customButton";
@@ -40,9 +40,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function NewItens() {
-  const { title, type } = useLocalSearchParams<{
+  const { title, type, mealId } = useLocalSearchParams<{
     title: string;
     type: MealType;
+    mealId?: string;
   }>();
   const [search, setSearch] = useState("");
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
@@ -57,7 +58,7 @@ export default function NewItens() {
     },
   });
 
-  const { append, fields } = useFieldArray({
+  const { append } = useFieldArray({
     control: form.control,
     name: "items",
   });
@@ -91,6 +92,28 @@ export default function NewItens() {
       });
     },
   });
+
+  const { mutateAsync: updateAsync, isPending: isUpdating } = useMutation({
+    mutationFn: updateMeal,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [apiKeys.meals] });
+      queryClient.invalidateQueries({ queryKey: [apiKeys.summary] });
+      toast.show("Refeição atualizada com sucesso!", {
+        type: "success",
+        backgroundColor: toastColors["success"],
+        position: "top",
+      });
+      router.back();
+    },
+    onError: (error) => {
+      toast.show(error?.message || "Ocorreu um erro", {
+        type: "error",
+        backgroundColor: toastColors["error"],
+        position: "top",
+      });
+    },
+  });
+
   function handleOpenFoodSheet(food: Food) {
     setSelectedFood(food);
     sheetRef.current?.expand();
@@ -109,6 +132,13 @@ export default function NewItens() {
     await mutateAsync(values);
   }
 
+  async function onUpdate(values: FormData) {
+    await updateAsync({ ...values, id: mealId as string });
+  }
+
+  const submit = mealId ? onUpdate : onSubmit;
+  const isLoadingSubmit = isPending || isUpdating;
+  console.log(form.getValues());
   return (
     <GestureHandlerRootView className="flex-1">
       <SafeAreaView className="flex-1">
@@ -134,13 +164,14 @@ export default function NewItens() {
               isRefetching={isRefetching}
               onAdd={handleOpenFoodSheet}
               onRefetch={refetch}
+              foodsSelecteds={form.watch("items")}
             />
           </View>
 
           <CustomButton
             title="Confirmar"
-            onPress={form.handleSubmit(onSubmit)}
-            loading={isPending}
+            onPress={form.handleSubmit(submit)}
+            loading={isLoadingSubmit}
           />
         </View>
 
