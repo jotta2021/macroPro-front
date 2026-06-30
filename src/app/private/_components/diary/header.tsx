@@ -15,7 +15,7 @@ export default function HeaderDiary({ openCalendar }: Props) {
       <View className="flex-row gap-4 items-center">
         <View className="flex-row items-center gap-2 ">
           <Image
-            source={require("../../../../../../assets/images/fire.png")}
+            source={require("../../../../../assets/images/fire.png")}
             style={{
               width: 24,
               height: 24,
@@ -32,4 +32,3 @@ export default function HeaderDiary({ openCalendar }: Props) {
     </View>
   );
 }
-

@@ -203,7 +203,7 @@ export default function OnBoarding() {
 
   useEffect(() => {
     if (dataProfile) {
-      router.replace("/private/(tabs)");
+      router.replace("/private/(tabs)/diary");
     }
   }, [dataProfile]);
 

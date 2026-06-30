@@ -1,63 +1,22 @@
 import { apiKeys } from "@/core/apiKeys";
-import getMeals from "@/services/meals-service";
+import { localesPTBR } from "@/hook/calendar-locales";
 import getSumary from "@/services/sumary-service";
 import Colors from "@/shared/theme/colors.json";
-import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
 import BottomSheet from "@/shared/ui/templates/bottom-sheet";
 import { BottomSheetMethods } from "@/shared/ui/templates/bottom-sheet/types";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { Calendar, LocaleConfig } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderDiary from "./_components/header";
-import MealList from "./_components/mealList";
-import SummaryCard from "./_components/summaryCard";
+import HeaderDiary from "../../_components/diary/header";
+import MealList from "../../_components/diary/mealList";
+import SummaryCard from "../../_components/diary/summaryCard";
+import SummaryLoading from "../../_components/diary/summaryLoading";
 
-LocaleConfig.locales["pt-br"] = {
-  monthNames: [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ],
-  monthNamesShort: [
-    "Jan.",
-    "Fev.",
-    "Mar.",
-    "Abr.",
-    "Mai",
-    "Jun.",
-    "Jul.",
-    "Ago.",
-    "Set.",
-    "Out.",
-    "Nov.",
-    "Dez.",
-  ],
-  dayNames: [
-    "Domingo",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado",
-  ],
-  dayNamesShort: ["Dom.", "Seg.", "Ter.", "Qua.", "Qui.", "Sex.", "Sáb."],
-  today: "Hoje",
-};
-LocaleConfig.defaultLocale = "pt-br";
+localesPTBR();
 export default function Home() {
   const sheetRef = useRef<BottomSheetMethods>(null);
   const [selectedDate, setSelectedDate] = useState(
@@ -69,46 +28,12 @@ export default function Home() {
     enabled: !!selectedDate,
   });
 
-  const { data: mealsList, isPending: mealsPending } = useQuery({
-    queryKey: [apiKeys.meals, selectedDate],
-    queryFn: () => getMeals(selectedDate),
-    enabled: !!selectedDate,
-  });
-
-  console.log(data);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="flex-1" edges={["top"]}>
         {isPending ? (
           <View className="flex px-6 mt-14">
-            <ShimmerGroup isLoading={isPending}>
-              <Shimmer
-                preset="neutral"
-                style={{
-                  width: "100%",
-                  height: 180,
-                  borderRadius: 16,
-                }}
-              ></Shimmer>
-              <View className="flex gap-4 py-4">
-                <Shimmer
-                  preset="neutral"
-                  style={{
-                    width: "100%",
-                    height: 30,
-                    borderRadius: 16,
-                  }}
-                ></Shimmer>
-                <Shimmer
-                  preset="neutral"
-                  style={{
-                    width: "100%",
-                    height: 30,
-                    borderRadius: 16,
-                  }}
-                ></Shimmer>
-              </View>
-            </ShimmerGroup>
+            <SummaryLoading />
           </View>
         ) : (
           <ScrollView

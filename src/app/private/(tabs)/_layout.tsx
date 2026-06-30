@@ -32,13 +32,6 @@ export default function TabLayout() {
           tabBarActiveTintColor: colors.primaryDark,
         }}
       />
-
-      {/* Exclude _components from routing */}
-      <Tabs.Screen name="diary/_components/header" options={{ href: null }} />
-      <Tabs.Screen
-        name="diary/_components/summaryCard"
-        options={{ href: null }}
-      />
     </Tabs>
   );
 }

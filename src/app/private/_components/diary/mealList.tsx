@@ -14,14 +14,14 @@ interface MealListProps {
 }
 
 const MealImages: Record<MealType, any> = {
-  [MealType.BREAKFAST]: require("../../../../../../assets/images/coffee.png"),
-  [MealType.LUNCH]: require("../../../../../../assets/images/fried-rice.png"),
-  [MealType.DINNER]: require("../../../../../../assets/images/vegetarian.png"),
-  [MealType.SNACK]: require("../../../../../../assets/images/french-fries.png"),
+  [MealType.BREAKFAST]: require("../../../../../assets/images/coffee.png"),
+  [MealType.LUNCH]: require("../../../../../assets/images/fried-rice.png"),
+  [MealType.DINNER]: require("../../../../../assets/images/vegetarian.png"),
+  [MealType.SNACK]: require("../../../../../assets/images/french-fries.png"),
 };
 
 export default function MealList({
-  meals = [],
+  meals,
   onAddMealPress,
   onMealDetailsPress,
   onSeeMorePress,
@@ -47,11 +47,7 @@ export default function MealList({
 
     return (
       <View>
-        <View
-          activeOpacity={0.7}
-          className="flex-row items-center justify-between py-4"
-        >
-          {/* Circular Progress with Meal Image */}
+        <View className="flex-row items-center justify-between py-4">
           <CircularProgress
             progress={progress}
             size={54}
@@ -97,8 +93,7 @@ export default function MealList({
           </Button>
         </View>
 
-        {/* Separator line between list items, except the last one */}
-        {index < meals.length - 1 && (
+        {meals && index < meals.length - 1 && (
           <View className="border-b border-gray-100" />
         )}
       </View>
