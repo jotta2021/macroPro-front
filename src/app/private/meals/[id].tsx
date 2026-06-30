@@ -8,6 +8,7 @@ import { Shimmer, ShimmerGroup } from "@/shared/ui/molecules/Shimmer/Shimmer";
 import { useQuery } from "@tanstack/react-query";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MealDetail() {
@@ -29,9 +30,10 @@ export default function MealDetail() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50" edges={["top"]}>
-      <Stack.Screen options={{ title }} />
-      <View className="flex-1 px-6 py-6">
+    <GestureHandlerRootView className="flex-1">
+      <SafeAreaView className="flex-1 bg-gray-50" edges={["top"]}>
+        <Stack.Screen options={{ title }} />
+        <View className="flex-1 px-6 py-6">
         <ScrollView
           className="flex-1"
           showsVerticalScrollIndicator={false}
@@ -72,7 +74,7 @@ export default function MealDetail() {
                     Alimentos ({meal.items.length})
                   </Text>
                   {meal.items.map((item) => (
-                    <MealItemCard key={item.id} item={item} />
+                    <MealItemCard key={item.id} item={item} mealId={id} />
                   ))}
                 </>
               ) : (
@@ -86,7 +88,8 @@ export default function MealDetail() {
           ) : null}
         </ScrollView>
         <CustomButton title="Adicionar mais" onPress={handleAddMore} />
-      </View>
-    </SafeAreaView>
+        </View>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }

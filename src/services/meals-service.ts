@@ -20,3 +20,18 @@ export async function updateMeal(meal: MealPost) {
   const response = await api.put(`/meals/${meal.id}`, meal);
   return response.data;
 }
+
+export async function updateMealFood({
+  mealId,
+  itemId,
+  consumedGrams,
+}: {
+  mealId: string;
+  itemId: string;
+  consumedGrams: number;
+}) {
+  const response = await api.patch(`/meals/${mealId}/food/${itemId}`, {
+    consumedGrams,
+  });
+  return response.data;
+}

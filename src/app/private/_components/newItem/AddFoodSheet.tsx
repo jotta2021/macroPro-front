@@ -6,7 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------
@@ -64,101 +71,112 @@ export const AddFoodSheet = forwardRef<BottomSheetMethods, AddFoodSheetProps>(
     }
 
     return (
-      <BottomSheet ref={ref} snapPoints={["55%"]} enableBackdrop>
-        <View className="px-6 pt-2 pb-8">
-          {/* Food info header */}
-          {food && (
-            <View className="bg-gray-50 rounded-2xl p-4 mb-5">
-              <View className="flex-row items-center gap-3 mb-3">
-                <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
-                  <Ionicons
-                    name="nutrition-outline"
-                    size={20}
-                    color={Colors.primary}
+      <BottomSheet ref={ref} snapPoints={["55%", "80%"]} enableBackdrop>
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View className="px-6 pt-2 pb-8">
+            {/* Food info header */}
+            {food && (
+              <View className="bg-gray-50 rounded-2xl p-4 mb-5">
+                <View className="flex-row items-center gap-3 mb-3">
+                  <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
+                    <Ionicons
+                      name="nutrition-outline"
+                      size={20}
+                      color={Colors.primary}
+                    />
+                  </View>
+                  <View className="flex-1">
+                    <Text
+                      className="text-neutral font-inter-semibold text-base"
+                      numberOfLines={1}
+                    >
+                      {food.name}
+                    </Text>
+                    <Text className="text-neutralLight font-inter text-xs mt-0.5">
+                      Base: {food.baseGrams}g
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Macros row */}
+                <View className="flex-row gap-2">
+                  <MacroChip
+                    label="Kcal"
+                    value={`${estimatedCalories}`}
+                    highlight
+                  />
+                  <MacroChip
+                    label="Carb"
+                    value={`${Math.round(food.carbo * factor)}g`}
+                  />
+                  <MacroChip
+                    label="Prot"
+                    value={`${Math.round(food.protein * factor)}g`}
+                  />
+                  <MacroChip
+                    label="Gord"
+                    value={`${Math.round(food.fat * factor)}g`}
                   />
                 </View>
-                <View className="flex-1">
-                  <Text
-                    className="text-neutral font-inter-semibold text-base"
-                    numberOfLines={1}
-                  >
-                    {food.name}
-                  </Text>
-                  <Text className="text-neutralLight font-inter text-xs mt-0.5">
-                    Base: {food.baseGrams}g
-                  </Text>
-                </View>
-              </View>
-
-              {/* Macros row */}
-              <View className="flex-row gap-2">
-                <MacroChip
-                  label="Kcal"
-                  value={`${estimatedCalories}`}
-                  highlight
-                />
-                <MacroChip
-                  label="Carb"
-                  value={`${Math.round(food.carbo * factor)}g`}
-                />
-                <MacroChip
-                  label="Prot"
-                  value={`${Math.round(food.protein * factor)}g`}
-                />
-                <MacroChip
-                  label="Gord"
-                  value={`${Math.round(food.fat * factor)}g`}
-                />
-              </View>
-            </View>
-          )}
-
-          {/* Grams input */}
-          <Text className="text-neutral font-inter-semibold text-sm mb-2">
-            Gramatura consumida
-          </Text>
-          <Controller
-            control={control}
-            name="consumedGrams"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <View
-                className={`flex-row items-center border rounded-xl px-4 bg-gray-50 h-12 ${
-                  errors.consumedGrams ? "border-red-400" : "border-gray-200"
-                }`}
-              >
-                <TextInput
-                  className="flex-1 text-neutral font-inter text-sm"
-                  placeholder="Ex: 150"
-                  placeholderTextColor={Colors.neutralLight}
-                  keyboardType="numeric"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-                <Text className="text-neutralLight font-inter text-sm">g</Text>
               </View>
             )}
-          />
-          {errors.consumedGrams && (
-            <View className="flex-row items-center gap-1 mt-1">
-              <Ionicons name="alert-circle-outline" size={12} color="#f87171" />
-              <Text className="text-red-400 font-inter text-xs">
-                {errors.consumedGrams.message}
-              </Text>
-            </View>
-          )}
 
-          {/* Confirm button */}
-          <TouchableOpacity
-            onPress={handleSubmit(onSubmit)}
-            activeOpacity={0.85}
-            className="bg-primary w-full py-4 rounded-2xl items-center mt-5"
-          >
-            <Text className="text-white font-inter-semibold text-sm">
-              Adicionar alimento
+            {/* Grams input */}
+            <Text className="text-neutral font-inter-semibold text-sm mb-2">
+              Gramatura consumida
             </Text>
-          </TouchableOpacity>
-        </View>
+            <Controller
+              control={control}
+              name="consumedGrams"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <View
+                  className={`flex-row items-center border rounded-xl px-4 bg-gray-50 h-12 ${
+                    errors.consumedGrams ? "border-red-400" : "border-gray-200"
+                  }`}
+                >
+                  <TextInput
+                    className="flex-1 text-neutral font-inter text-sm"
+                    placeholder="Ex: 150"
+                    placeholderTextColor={Colors.neutralLight}
+                    keyboardType="numeric"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                  <Text className="text-neutralLight font-inter text-sm">
+                    g
+                  </Text>
+                </View>
+              )}
+            />
+            {errors.consumedGrams && (
+              <View className="flex-row items-center gap-1 mt-1">
+                <Ionicons
+                  name="alert-circle-outline"
+                  size={12}
+                  color="#f87171"
+                />
+                <Text className="text-red-400 font-inter text-xs">
+                  {errors.consumedGrams.message}
+                </Text>
+              </View>
+            )}
+
+            {/* Confirm button */}
+            <TouchableOpacity
+              onPress={handleSubmit(onSubmit)}
+              activeOpacity={0.85}
+              className="bg-primary w-full py-4 rounded-2xl items-center mt-5"
+            >
+              <Text className="text-white font-inter-semibold text-sm">
+                Adicionar alimento
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </BottomSheet>
     );
   },

@@ -138,7 +138,7 @@ export default function NewItens() {
 
   const submit = mealId ? onUpdate : onSubmit;
   const isLoadingSubmit = isPending || isUpdating;
-  console.log(form.getValues());
+
   return (
     <GestureHandlerRootView className="flex-1">
       <SafeAreaView className="flex-1">
