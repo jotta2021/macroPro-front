@@ -157,16 +157,15 @@ export default function NewItens() {
             cancelButtonWidth={70}
             onSearch={setSearch}
           />
-          <View className="flex-1 mt-4">
-            <FoodList
-              foods={foods}
-              isLoading={isLoading}
-              isRefetching={isRefetching}
-              onAdd={handleOpenFoodSheet}
-              onRefetch={refetch}
-              foodsSelecteds={form.watch("items")}
-            />
-          </View>
+
+          <FoodList
+            foods={foods}
+            isLoading={isLoading}
+            isRefetching={isRefetching}
+            onAdd={handleOpenFoodSheet}
+            onRefetch={refetch}
+            foodsSelecteds={form.watch("items")}
+          />
 
           <CustomButton
             title="Confirmar"
@@ -179,6 +178,7 @@ export default function NewItens() {
           ref={sheetRef}
           food={selectedFood}
           onConfirm={handleAddFood}
+          confirmLabel="Adicionar"
         />
       </SafeAreaView>
     </GestureHandlerRootView>

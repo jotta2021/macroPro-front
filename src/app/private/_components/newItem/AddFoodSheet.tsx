@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -36,13 +37,19 @@ type FormData = z.infer<typeof schema>;
 export type AddFoodSheetProps = {
   food: Food | null;
   onConfirm: (food: Food, grams: number) => void;
+  /** Pre-populate the grams field (e.g. when editing an existing entry) */
+  initialGrams?: string;
+  /** Show a loading/disabled state on the confirm button */
+  isPending?: boolean;
+  /** Override the default button label */
+  confirmLabel?: string;
 };
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 export const AddFoodSheet = forwardRef<BottomSheetMethods, AddFoodSheetProps>(
-  ({ food, onConfirm }, ref) => {
+  ({ food, onConfirm, initialGrams, isPending = false, confirmLabel }, ref) => {
     const {
       control,
       handleSubmit,
@@ -51,22 +58,22 @@ export const AddFoodSheet = forwardRef<BottomSheetMethods, AddFoodSheetProps>(
       formState: { errors },
     } = useForm<FormData>({
       resolver: zodResolver(schema),
-      defaultValues: { consumedGrams: "" },
+      defaultValues: { consumedGrams: initialGrams ?? "" },
     });
 
-    // reset form whenever a new food is selected
+    // reset form whenever a new food is selected or initialGrams changes
     useEffect(() => {
-      reset({ consumedGrams: "" });
-    }, [food, reset]);
+      reset({ consumedGrams: initialGrams ?? "" });
+    }, [food, initialGrams, reset]);
 
     const gramsValue = watch("consumedGrams");
     const gramsNum = Number(gramsValue) || 0;
     const factor = food ? gramsNum / food.baseGrams : 0;
     const estimatedCalories = food ? Math.round(food.calories * factor) : 0;
 
-    function onSubmit(data: FormData) {
+    async function onSubmit(data: FormData) {
       if (!food) return;
-      onConfirm(food, Number(data.consumedGrams));
+      await onConfirm(food, Number(data.consumedGrams));
       (ref as React.RefObject<BottomSheetMethods>).current?.close();
     }
 
@@ -169,10 +176,12 @@ export const AddFoodSheet = forwardRef<BottomSheetMethods, AddFoodSheetProps>(
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
               activeOpacity={0.85}
-              className="bg-primary w-full py-4 rounded-2xl items-center mt-5"
+              disabled={isPending}
+              className={`w-full py-4 flex-row rounded-2xl flex mt-5 bg-primary justify-center items-center gap-2`}
             >
-              <Text className="text-white font-inter-semibold text-sm">
-                Adicionar alimento
+              {isPending && <ActivityIndicator color={"white"} />}
+              <Text className="font-inter-semibold text-sm text-white">
+                {confirmLabel}
               </Text>
             </TouchableOpacity>
           </View>

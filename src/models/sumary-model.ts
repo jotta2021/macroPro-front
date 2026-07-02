@@ -12,6 +12,7 @@ export type DailyResume = {
 };
 export type SummaryDiary = {
   dailySummary: DailyResume;
+  consistencyDays: number;
   meals: [
     {
       type: MealType;

@@ -4,27 +4,35 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
   openCalendar: () => void;
+  consistenceDays?: number;
 }
 
-export default function HeaderDiary({ openCalendar }: Props) {
-  const fire = 2;
+export default function HeaderDiary({
+  openCalendar,
+  consistenceDays = 0,
+}: Props) {
   return (
     <View className="justify-between flex-row items-center">
       <Text className="text-2xl text-neutral font-inter-bold">Hoje</Text>
 
       <View className="flex-row gap-4 items-center">
-        <View className="flex-row items-center gap-2 ">
+        <TouchableOpacity
+          activeOpacity={0.7}
+          className="flex-row items-center gap-2 "
+        >
           <Image
             source={require("../../../../../assets/images/fire.png")}
             style={{
               width: 24,
               height: 24,
-              opacity: fire > 0 ? 1 : 0.4,
-              tintColor: fire > 0 ? undefined : "#8F95A3",
+              opacity: consistenceDays > 0 ? 1 : 0.4,
+              tintColor: consistenceDays > 0 ? undefined : "#8F95A3",
             }}
           />
-          <Text className="text-lg text-neutral font-inter-bold">10</Text>
-        </View>
+          <Text className="text-lg text-neutral font-inter-bold">
+            {consistenceDays}
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={openCalendar} activeOpacity={0.7}>
           <Entypo name="calendar" size={24} color={Colors.neutral} />
         </TouchableOpacity>

@@ -15,7 +15,7 @@ export function FoodListItem({
   foodIsSelected,
 }: FoodListItemProps) {
   return (
-    <View className="flex-row items-center justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm shadow-black/5">
+    <View className="flex-row items-center mt-1 justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3  shadow-sm shadow-black/5">
       {/* Info */}
       <View className="flex-1 mr-3">
         <Text

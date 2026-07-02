@@ -12,24 +12,23 @@ import { Gender } from "@/enum/gender-enum";
 import { Goal } from "@/enum/goal-enum";
 import queryClient from "@/lib/query-client";
 import postProfile, { getProfile } from "@/services/profile-service";
+import Colors from "@/shared/theme/colors.json";
+import { toastColors } from "@/shared/theme/toast-colors";
+import { useToast } from "@/shared/ui/molecules/Toast";
+import { CircleLoadingIndicator } from "@/shared/ui/molecules/circle-loader";
 import { AnimatedProgressBar } from "@/shared/ui/organisms/progress";
 import { useOnboarding } from "@/store/onboarding";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { toastColors } from "@/shared/theme/toast-colors";
-import { useToast } from "@/shared/ui/molecules/Toast";
-
-// Step 0 = intro (sem progresso visível), steps 1-6 = dados
 const TOTAL_STEPS = 6;
 
 export default function OnBoarding() {
   const [step, setStep] = useState(0);
 
-  // Local string state for numeric inputs before converting
   const [ageInput, setAgeInput] = useState("");
   const [weightInput, setWeightInput] = useState("");
   const [heightInput, setHeightInput] = useState("");
@@ -105,7 +104,6 @@ export default function OnBoarding() {
 
   const progress = step > 0 ? step / TOTAL_STEPS : 0;
 
-  // Validation function for each step
   const isStepValid = () => {
     switch (step) {
       case 0:
@@ -127,7 +125,6 @@ export default function OnBoarding() {
     }
   };
 
-  // Label configuration for bottom button
   const getButtonLabel = () => {
     if (step === 0) return "Começar";
     if (step === TOTAL_STEPS) return "Criar meu plano";
@@ -215,7 +212,14 @@ export default function OnBoarding() {
   if (isLoadingProfile) {
     return (
       <SafeAreaView className="flex-1 bg-white" style={{ flex: 1 }}>
-        <ActivityIndicator />
+        <CircleLoadingIndicator
+          dotSpacing={8}
+          dotColor={Colors.primary}
+          style={{
+            marginTop: 60,
+          }}
+          duration={500}
+        />
       </SafeAreaView>
     );
   }

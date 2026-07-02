@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     color: "#000000",
-    fontSize: 17,
+    fontSize: 14,
     fontFamily: "System",
     fontWeight: "400",
 
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   cancelText: {
-    fontSize: 17,
+    fontSize: 14,
     fontFamily: "System",
     fontWeight: "400",
   },

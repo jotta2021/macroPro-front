@@ -43,6 +43,7 @@ export default function Home() {
           >
             <HeaderDiary
               openCalendar={() => sheetRef.current?.snapToIndex(0)}
+              consistenceDays={data?.consistencyDays}
             />
             {data && <SummaryCard data={data.dailySummary} />}
 
