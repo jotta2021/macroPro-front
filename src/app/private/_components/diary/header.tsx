@@ -1,5 +1,6 @@
 import Colors from "@/shared/theme/colors.json";
 import { Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 interface Props {
@@ -19,6 +20,7 @@ export default function HeaderDiary({
         <TouchableOpacity
           activeOpacity={0.7}
           className="flex-row items-center gap-2 "
+          onPress={() => router.push("/private/consistence")}
         >
           <Image
             source={require("../../../../../assets/images/fire.png")}

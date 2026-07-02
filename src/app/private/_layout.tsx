@@ -10,6 +10,10 @@ export default function ProtectedLayout() {
         options={{ headerShown: true, title: "Editar perfil" }}
       />
       <Stack.Screen name="meals/newItens" options={{ headerShown: true }} />
+      <Stack.Screen
+        name="consistence"
+        options={{ headerShown: true, title: "Consistência" }}
+      />
     </Stack>
   );
 }

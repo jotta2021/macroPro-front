@@ -3,4 +3,5 @@ export const apiKeys = {
   summary: "summary",
   meals: "meals",
   foods: "foods",
+  consistence: "consistence",
 };
